@@ -1,0 +1,19 @@
+{
+  "appId": "com.starfn.starhybrid",
+  "productName": "Star Hybrid",
+  "directories": {
+    "output": "dist"
+  },
+  "win": {
+    "target": "msi",
+    "icon": "starfn.jpg"
+  },
+  "extraFiles": [
+    "templates/**",
+    "static/**",
+    "app.py",
+    "config.json",
+    "proxy_logic.py",
+    "proxy_runner.py"
+  ]
+}
