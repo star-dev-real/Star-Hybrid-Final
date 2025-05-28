@@ -1,0 +1,25 @@
+{
+    "version": "1.0",
+    "name": "Star FN Hybrid",
+    "author": [
+        "Nikoo",
+        "Star",
+        "Giro"
+    ],
+    "description": "Free to use, proxy-based script that grants a user every cosmetic in Fortnite and more!",
+    "apis": [
+        {
+            "new": "https://fortnite-api.com/v2/cosmetics/new",
+            "all": "https://fortnite-api.com/v2/cosmetics",
+            "instruments": "https://fortnite-api.com/v2/cosmetics/instruments",
+            "cars": "https://fortnite-api.com/v2/cosmetics/cars",
+            "lego-cosmetics": "https://fortnite-api.com/v2/cosmetics/lego",
+            "lego-kits": "https://fortnite-api.com/v2/cosmetics/lego/kits",
+            "beans": "https://fortnite-api.com/v2/cosmetics/beans",
+            "banner": "https://fortnite-api.com/v1/banners",
+            "banner-color": "https://fortnite-api.com/v1/banners/colors"
+        }
+    ],
+    "hasPremium": true,
+    "everyCosmetic": true
+}
