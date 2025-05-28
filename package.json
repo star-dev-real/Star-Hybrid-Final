@@ -1,0 +1,36 @@
+{
+  "name": "star-fn-hybrid",
+  "version": "1.0.0",
+  "description": "Free Fortnite skins for mobile and PC!",
+  "author": "Star",
+  "main": "main.js",
+  "scripts": {
+    "start-flask": "python ./flask_app/app.py",
+    "start-electron": "electron .",
+    "start": "concurrently \"npm run start-flask\" \"wait-on http://localhost:5000 && npm run start-electron\"",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.star.fnhybrid",
+    "productName": "StarHybrid",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/.*",
+      "!**/*.map"
+    ],
+    "win": {
+      "target": "msi",
+      "icon": "starfn.jpg"
+    }
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "wait-on": "^8.0.3"
+  }
+}
