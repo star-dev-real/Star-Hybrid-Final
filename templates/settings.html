@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Star FN Hybrid</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <span>⚡</span>
+            </div>
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="main.html">
+                    <span class="icon">🏠</span>
+                    <span class="title">Main</span>
+                </a>
+            </li>
+            <li>
+                <a href="customize.html">
+                    <span class="icon">🎨</span>
+                    <span class="title">Customize</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="#">
+                    <span class="icon">⚙️</span>
+                    <span class="title">Settings</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <h1>Settings</h1>
+                <span class="version">v1.0</span>
+            </div>
+            <div class="author">Configure your Star FN Hybrid experience</div>
+        </header>
+
+        <main>
+            <div class="settings-grid">
+                <div class="settings-category">
+                    <h3><span class="icon">🔌</span> Proxy Configuration</h3>
+                    <div class="setting-item">
+                        <label>Proxy Port</label>
+                        <input type="number" value="8080" class="setting-input">
+                    </div>
+                    <div class="setting-item">
+                        <label>Auto-Start Proxy</label>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-category">
+                    <h3><span class="icon">🎨</span> Appearance</h3>
+                    <div class="setting-item">
+                        <label>Theme Color</label>
+                        <select class="setting-input">
+                            <option>Blue (Default)</option>
+                            <option>Purple</option>
+                            <option>Red</option>
+                            <option>Green</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Dark Mode</label>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <button id="saveBtn" class="glow-on-hover">
+                        <span class="btn-text">Save Settings</span>
+                        <span class="btn-icon">💾</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>

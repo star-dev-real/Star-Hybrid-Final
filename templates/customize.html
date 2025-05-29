@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize | Star FN Hybrid</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background"></div>
+  
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <span>⚡</span>
+            </div>
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="main.html">
+                    <span class="icon">🏠</span>
+                    <span class="title">Main</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="#">
+                    <span class="icon">🎨</span>
+                    <span class="title">Customize</span>
+                </a>
+            </li>
+            <li>
+                <a href="settings.html">
+                    <span class="icon">⚙️</span>
+                    <span class="title">Settings</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <h1>Cosmetic Customizer</h1>
+                <span class="version">v1.0</span>
+            </div>
+            <div class="author">Unlock and customize your Fortnite items</div>
+        </header>
+
+        <main>
+            <div class="cosmetic-grid">
+                <div class="cosmetic-category">
+                    <h3><span class="icon">👕</span> Outfits</h3>
+                    <div class="cosmetic-items">
+                        <div class="cosmetic-item selected">
+                            <img src="https://via.placeholder.com/100" alt="Skin">
+                            <span>Default Skin</span>
+                        </div>
+                        <div class="cosmetic-item">
+                            <img src="https://via.placeholder.com/100" alt="Skin">
+                            <span>Rare Skin</span>
+                        </div>
+                        <div class="cosmetic-item">
+                            <img src="https://via.placeholder.com/100" alt="Skin">
+                            <span>Epic Skin</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cosmetic-category">
+                    <h3><span class="icon">🎒</span> Backblings</h3>
+                    <div class="cosmetic-items">
+                        <div class="cosmetic-item">
+                            <img src="https://via.placeholder.com/100" alt="Backbling">
+                            <span>Default</span>
+                        </div>
+                        <div class="cosmetic-item selected">
+                            <img src="https://via.placeholder.com/100" alt="Backbling">
+                            <span>Black Shield</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <button id="applyBtn" class="glow-on-hover">
+                        <span class="btn-text">Apply Changes</span>
+                        <span class="btn-icon">💾</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>
