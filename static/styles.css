@@ -248,7 +248,6 @@ footer {
     font-size: 0.8rem;
 }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -265,4 +264,232 @@ footer {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #00c8ff;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 80px;
+    background: rgba(15, 52, 96, 0.7);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(0, 168, 255, 0.1);
+    transition: width 0.3s ease;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.sidebar:hover {
+    width: 220px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(0, 168, 255, 0.1);
+}
+
+.sidebar-logo {
+    font-size: 24px;
+    color: var(--highlight);
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.sidebar-menu li {
+    position: relative;
+    margin: 10px 0;
+}
+
+.sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-secondary);
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-menu li a:hover {
+    background: rgba(0, 168, 255, 0.1);
+    color: var(--highlight);
+}
+
+.sidebar-menu li.active a {
+    color: var(--highlight);
+    background: rgba(0, 168, 255, 0.2);
+}
+
+.sidebar-menu li a .icon {
+    font-size: 20px;
+    min-width: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar-menu li a .title {
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar:hover .sidebar-menu li a .title {
+    opacity: 1;
+}
+
+.container {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar:hover ~ .container {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+}
+
+.cosmetic-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.cosmetic-category {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 3px solid var(--highlight);
+}
+
+.cosmetic-category h3 {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cosmetic-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.cosmetic-item {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    padding: 0.8rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 120px;
+}
+
+.cosmetic-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 168, 255, 0.2);
+}
+
+.cosmetic-item.selected {
+    border: 2px solid var(--highlight);
+    background: rgba(0, 168, 255, 0.1);
+}
+
+.cosmetic-item img {
+    width: 100%;
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+}
+
+.settings-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.settings-category {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 3px solid var(--highlight);
+}
+
+.settings-category h3 {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 168, 255, 0.2);
+    border-radius: 5px;
+    padding: 0.5rem;
+    color: var(--text);
+    width: 150px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--text-secondary);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--highlight);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+    background-color: white;
 }
