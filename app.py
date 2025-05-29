@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify
 from proxy_runner import start_mitm
 from proxy_logic import get_logs 
+from datetime import datetime
 
 app = Flask(__name__)
 

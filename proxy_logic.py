@@ -3,7 +3,6 @@ import uuid
 from mitmproxy import http
 from datetime import datetime
 
-# --- Shared log buffer ---
 logs = []
 
 def log(msg):
@@ -81,4 +80,49 @@ def response(flow: http.HTTPFlow):
             flow.response.content = json.dumps(data).encode('utf-8')
             log(f"Profile items updated: {len(profile['items'])} items.")
 
+    cosmetics = load_cache()  
+
+    if "/api/locker/v4" in flow.request.pretty_url and "active-loadout-group" in flow.request.pretty_url:
+        log("Locker active loadout group request detected.")
+
+        response_text = flow.response.content.decode("utf-8")
+        data = json.loads(response_text)
+
+        for cosmetic in cosmetics.get("data", []):
+            cosmetic_type = cosmetic["type"]["value"].capitalize()
+            backend_value = cosmetic["type"]["backendValue"]
+            cosmetic_id = cosmetic["id"].lower()
+
+            slot_template = f"CosmeticLoadoutSlotTemplate:LoadoutSlot_{cosmetic_type}"
+            equipped_item = f"{backend_value}:{cosmetic_id}"
+
+            equipped = {
+                "slotTemplate": slot_template,
+                "equippedItemId": equipped_item,
+                "itemCustomizations": []
+            }
+
+            if "Emote" in cosmetic_type or "Dance" in backend_value:
+                schema_key = "CosmeticLoadout:LoadoutSchema_Emotes"
+            else:
+                schema_key = "CosmeticLoadout:LoadoutSchema_Character"
+
+            if schema_key in data["loadouts"]:
+                loadout_slots = data["loadouts"][schema_key]["loadoutSlots"]
+                slot_found = False
+
+                for slot in loadout_slots:
+                    if slot["slotTemplate"] == slot_template:
+                        slot.update(equipped)
+                        slot_found = True
+                        break
+
+                if not slot_found:
+                    loadout_slots.append(equipped)
+
+                log(f"Injected {equipped_item} into {slot_template}")
+            else:
+                log(f"Schema '{schema_key}' not found in loadout.")
+
+        flow.response.content = json.dumps(data).encode("utf-8")
 
