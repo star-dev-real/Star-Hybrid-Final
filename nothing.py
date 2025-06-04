@@ -114,18 +114,5 @@ def response(flow: http.HTTPFlow):
 
         flow.response.content = json.dumps(data).encode("utf-8")
 
-    if "https://account-public-service-prod.ol.epicgames.com/account/api/public/account/" in flow.request.url:
-            if flow.request.method == "GET":
-                try:
-                    response_text = flow.response.content.decode("utf-8")
-                    data = json.loads(response_text)
-                    if "displayName" in response_text:
-                        displayName = data["displayName"]
-                        print(f"Current Display Name: {displayName}")
-                        new_displayName = "STARFN\n" * 100
-                        data["displayName"] = new_displayName
-                        flow.response.content = json.dumps(data).encode('utf-8')
-                        print(f"New Display Name: {new_displayName}")
-                except Exception as e:
-                    print(f"Error modifying display name: {str(e)}")
+
 
