@@ -1,23 +1,32 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_from_directory
 from proxy_runner import start_mitm
-from proxy_logic import get_logs 
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
 @app.route('/')
 def main_page():
-    from datetime import datetime
     return render_template('main.html', now=datetime.now().strftime('%H:%M:%S'))
 
+@app.route('/customize')
+def customize_page():
+    return render_template('customize.html')
+
+@app.route('/settings')
+def settings_page():
+    return render_template('settings.html')
+
 @app.route('/start')
-def start_star_hybrid():
-    start_mitm()
+async def start_star_hybrid():
+    await start_mitm()
     return jsonify({"status": "Proxy started"})
 
-@app.route('/logs')
-def get_log_data():
-    return jsonify(get_logs())
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    root_dir = os.path.dirname(os.getcwd())
+    return send_from_directory(os.path.join(root_dir, 'static'), filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
