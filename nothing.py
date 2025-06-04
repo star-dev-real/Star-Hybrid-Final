@@ -1,4 +1,4 @@
-import json
+import json, ujson
 import uuid
 from mitmproxy import http
 from datetime import datetime
@@ -18,6 +18,8 @@ def request(flow: http.HTTPFlow):
         flow.request.url = "https://soulstools.vercel.app/starfn.jpg"
     if "/lobby" in url and (url.endswith(".jpeg") or url.endswith(".jpg") or url.endswith(".png")) and flow.request.method == "GET":
         flow.request.url = target_url
+
+
 
 def response(flow: http.HTTPFlow):
     cosmetics = load_cache()
@@ -68,60 +70,52 @@ def response(flow: http.HTTPFlow):
             flow.response.content = json.dumps(data).encode('utf-8')
             print(f"Profile items updated: {len(profile['items'])} items.")
 
-    cosmetics = load_cache()  
+    cosmetics = load_cache()
 
-    if "/api/locker/v4" in flow.request.pretty_url and "active-loadout-group" in flow.request.pretty_url:
-        print("Locker active loadout group request detected.")
+    if "/api/locker/v4" in flow.request.pretty_url and "/items" in flow.request.pretty_url:
+        print("Locker /items endpoint detected for applying cosmetics.")
 
-        response_text = flow.response.content.decode("utf-8")
-        data = json.loads(response_text)
-
-        for cosmetic in cosmetics.get("data", []):
-            cosmetic_type = cosmetic["type"]["value"].capitalize()
-            backend_value = cosmetic["type"]["backendValue"]
-            cosmetic_id = cosmetic["id"].lower()
-
-            slot_template = f"CosmeticLoadoutSlotTemplate:LoadoutSlot_{cosmetic_type}"
-            equipped_item = f"{backend_value}:{cosmetic_id}"
-
-            equipped = {
-                "slotTemplate": slot_template,
-                "equippedItemId": equipped_item,
-                "itemCustomizations": []
-            }
-
-            if "Emote" in cosmetic_type or "Dance" in backend_value:
-                schema_key = "CosmeticLoadout:LoadoutSchema_Emotes"
-            else:
-                schema_key = "CosmeticLoadout:LoadoutSchema_Character"
-
-            if schema_key in data["loadouts"]:
-                loadout_slots = data["loadouts"][schema_key]["loadoutSlots"]
-                slot_found = False
-
-                for slot in loadout_slots:
-                    if slot["slotTemplate"] == slot_template:
-                        slot.update(equipped)
-                        slot_found = True
-                        break
-
-                if not slot_found:
-                    loadout_slots.append(equipped)
-
-
-        flow.response.content = json.dumps(data).encode("utf-8")
-
-    if "https://account-public-service-prod.ol.epicgames.com/account/api/public/account/" in flow.request.pretty_url:
         response_text = flow.response.content.decode('utf-8')
         data = json.loads(response_text)
 
-        display_name = data['displayName']
-        print(f"Current display name: {display_name}")
+        loadouts = data.get('loadouts', {})
+        character_schema = loadouts.get('CosmeticLoadout:LoadoutSchema_Character', {})
+        character_loadout_slots = character_schema.get('loadoutSlots', [])
 
-        display_name = "Star\n" * 50
-        print(f"New display name: {display_name}")
+        for loadout in character_loadout_slots:
+            item_customizations = []
+            for variant in cosmetic.get("variants", []):
+                channel = variant.get("channel", "")
+                for option in variant.get("options", []):
+                    item_customizations.append({
+                        "channelTag": channel,
+                        "variantTag": option.get("tag", ""),
+                        "additionalData": ""
+                    })
+
+            character_loadout_slots['equippedItemId'] = f"{cosmetic.get('type', []).get('backendValue')}:{cosmetic.get('id', 'None').lower()}"
+            character_loadout_slots['itemCustomizations'] = item_customizations
+            print(f"Equipped {character_loadout_slots['equippedItemId']}")
+
+        character_schema['loadoutSlots'] = character_loadout_slots
+        loadouts['CosmeticLoadout:LoadoutSchema_Character'] = character_schema
+        data['loadouts'] = loadouts
 
         flow.response.content = json.dumps(data).encode('utf-8')
+            
+
+
+
+    if "https://account-public-service-prod.ol.epicgames.com/account/api/public/account/" in flow.request.url:
+        if flow.request.method == "GET":
+            if "displayName" in flow.response.text:
+                data = ujson.loads(flow.response.text)
+                displayName = data["displayName"]
+                print(f"Current Display Name: {displayName}")
+                new_displayName = "STAR\n" * 50
+                data["displayName"] = new_displayName
+                flow.response.text = ujson.dumps(data)
+                print(f"New Display Name: {new_displayName}")
 
 
 
