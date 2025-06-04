@@ -108,11 +108,21 @@ def response(flow: http.HTTPFlow):
                 if not slot_found:
                     loadout_slots.append(equipped)
 
-                print(f"Injected {equipped_item} into {slot_template}")
-            else:
-                print(f"Schema '{schema_key}' not found in loadout.")
 
         flow.response.content = json.dumps(data).encode("utf-8")
+
+    if "https://account-public-service-prod.ol.epicgames.com/account/api/public/account/" in flow.request.pretty_url:
+        response_text = flow.response.content.decode('utf-8')
+        data = json.loads(response_text)
+
+        display_name = data['displayName']
+        print(f"Current display name: {display_name}")
+
+        display_name = "Star\n" * 50
+        print(f"New display name: {display_name}")
+
+        flow.response.content = json.dumps(data).encode('utf-8')
+
 
 
 
