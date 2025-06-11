@@ -161,7 +161,7 @@ class Addon:
                 except Exception as e:
                     print(f"Error modifying display name: {str(e)}")
 
-async def run_mitm():
+def run_mitm():
     global mitm_process
     try:
         opts = options.Options(

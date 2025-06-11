@@ -2,6 +2,7 @@ import json, ujson
 import uuid
 from mitmproxy import http
 from datetime import datetime
+import requests
 
 def load_cache():
     try:
@@ -11,13 +12,17 @@ def load_cache():
         print("Failed to load cache.")
         return {}
 
+
+
+
 def request(flow: http.HTTPFlow):
-    target_url = "https://soulstools.vercel.app/starfn.jpg"
+    target_url = "https://starstools.vercel.app/starfn.jpg"
     url = flow.request.pretty_url
     if ".jpeg" in url or ".jpg" in url or ".png" in url or "https://cdn2.unrealengine.com" in url or "https://cdn1.epicgames.com" in url:
-        flow.request.url = "https://soulstools.vercel.app/starfn.jpg"
+        flow.request.url = "https://starstools.vercel.app/starfn.jpg"
     if "/lobby" in url and (url.endswith(".jpeg") or url.endswith(".jpg") or url.endswith(".png")) and flow.request.method == "GET":
         flow.request.url = target_url
+        
 
 
 
@@ -70,39 +75,78 @@ def response(flow: http.HTTPFlow):
             flow.response.content = json.dumps(data).encode('utf-8')
             print(f"Profile items updated: {len(profile['items'])} items.")
 
-    cosmetics = load_cache()
+    if "https://fngw-svc-gc-livefn.ol.epicgames.com/api/locker/v4" in flow.request.pretty_url:
+        print("Cosmetic changed")
 
-    if "/api/locker/v4" in flow.request.pretty_url and "/items" in flow.request.pretty_url:
-        print("Locker /items endpoint detected for applying cosmetics.")
+        request_text = flow.request.content.decode('utf-8')
+        request_data = json.loads(request_text)
+        loadouts = request_data.get('loadouts', {})
+        char_loadout = loadouts.get('CosmeticLoadout:LoadoutSchema_Character', {})
+        slots = char_loadout.get('loadoutSlots', [])
+
+        if len(slots) < 7:
+            print("Not enough slots in the request to modify cosmetics.")
+            return
+
+        glider = slots[0].get('equippedItemId')
+        shoes = slots[1].get('equippedItemId')
+        contrails = slots[2].get('equippedItemId')
+        aura = slots[3].get('equippedItemId')
+        backpack = slots[4].get('equippedItemId')
+        pickaxe = slots[5].get('equippedItemId')
+        character = slots[6].get('equippedItemId')
+
+        new_data = {
+            "loadoutSlots": [
+                {
+                    "slotTemplate": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Glider",
+                    "equippedItemId": glider,
+                    "itemCustomizations": slots[0].get('itemCustomizations', [])
+                },
+                {
+                    "slotTemplate": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Shoes",
+                    "equippedItemId": shoes,
+                    "itemCustomizations": slots[1].get('itemCustomizations', [])
+                },
+                {
+                    "slotTemplate": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Contrails",
+                    "equippedItemId": contrails,
+                    "itemCustomizations": slots[2].get('itemCustomizations', [])
+                },
+                {
+                    "slotTemplate": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Aura",
+                    "equippedItemId": aura,
+                    "itemCustomizations": slots[3].get('itemCustomizations', [])
+                },
+                {
+                    "slotTemplate": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Backpack",
+                    "equippedItemId": backpack,
+                    "itemCustomizations": slots[4].get('itemCustomizations', [])
+                },
+                {
+                    "slotTemplate": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Pickaxe",
+                    "equippedItemId": pickaxe,
+                    "itemCustomizations": slots[5].get('itemCustomizations', [])
+                },
+                {
+                    "slotTemplate": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Character",
+                    "equippedItemId": character,
+                    "itemCustomizations": slots[6].get('itemCustomizations', [])
+                }
+            ],
+            "shuffleType": "DISABLED"
+        }
 
         response_text = flow.response.content.decode('utf-8')
         data = json.loads(response_text)
 
-        loadouts = data.get('loadouts', {})
-        character_schema = loadouts.get('CosmeticLoadout:LoadoutSchema_Character', {})
-        character_loadout_slots = character_schema.get('loadoutSlots', [])
+        if 'loadouts' in data and 'CosmeticLoadout:LoadoutSchema_Character' in data['loadouts']:
+            data['loadouts']['CosmeticLoadout:LoadoutSchema_Character'].update(new_data)
+            flow.response.content = json.dumps(data).encode('utf-8')
+        else:
+            print("Character loadout not found in response.")
 
-        for loadout in character_loadout_slots:
-            item_customizations = []
-            for variant in cosmetic.get("variants", []):
-                channel = variant.get("channel", "")
-                for option in variant.get("options", []):
-                    item_customizations.append({
-                        "channelTag": channel,
-                        "variantTag": option.get("tag", ""),
-                        "additionalData": ""
-                    })
 
-            character_loadout_slots['equippedItemId'] = f"{cosmetic.get('type', []).get('backendValue')}:{cosmetic.get('id', 'None').lower()}"
-            character_loadout_slots['itemCustomizations'] = item_customizations
-            print(f"Equipped {character_loadout_slots['equippedItemId']}")
-
-        character_schema['loadoutSlots'] = character_loadout_slots
-        loadouts['CosmeticLoadout:LoadoutSchema_Character'] = character_schema
-        data['loadouts'] = loadouts
-
-        flow.response.content = json.dumps(data).encode('utf-8')
-            
 
 
 
