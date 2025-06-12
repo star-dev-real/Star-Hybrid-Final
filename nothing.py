@@ -4,7 +4,7 @@ from mitmproxy import http
 from datetime import datetime
 import requests
 
-def load_cache():
+def load_cachee():
     try:
         with open('cosmetics_cache.json', 'r') as f:
             return json.load(f)
@@ -12,7 +12,14 @@ def load_cache():
         print("Failed to load cache.")
         return {}
 
-
+def load_cache():
+    try:
+        response = requests.get('https://fortnite-api.com/v2/cosmetics/br')
+        response.raise_for_status() 
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to load cache: {e}")
+        return {}
 
 
 def request(flow: http.HTTPFlow):
@@ -177,9 +184,9 @@ def response(flow: http.HTTPFlow):
                     "dailyLoginInterval": "2025-06-12T18:19:25.617Z",
                     "dailyQuestRerolls": 1
                 },
-                "book_level": 99999999999999999,
+                "book_level": 999,
                 "season_num": 36,
-                "accountLevel": 999999999999999,
+                "accountLevel": 999,
                 "locker_service_cosmetic_items_migration_status": "LockerReadDualWrite"
             })
 
