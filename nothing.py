@@ -22,7 +22,19 @@ def request(flow: http.HTTPFlow):
         flow.request.url = "https://starstools.vercel.app/starfn.jpg"
     if "/lobby" in url and (url.endswith(".jpeg") or url.endswith(".jpg") or url.endswith(".png")) and flow.request.method == "GET":
         flow.request.url = target_url
-        
+
+    if "https://prm-dialogue-public-api-prod.ak.epicgames.com/api/v1/fortnite-br/channel/interstitials/target" in flow.request.pretty_url:
+        request_text = flow.request.content.decode('utf-8')
+        data = json.loads(request_text)
+
+        params = data['parameters']
+        params['battlepass'] = True
+        params['battlepassLevel'] = 999
+        params['3018'] = 999
+        params['levelPerPass'] = [999, 999, 999]
+        params['victoryCrownsRoyales']
+
+        json.dumps(data['params']).encode('utf-8')    
 
 
 
@@ -146,6 +158,37 @@ def response(flow: http.HTTPFlow):
         else:
             print("Character loadout not found in response.")
 
+    if "https://fngw-mcp-gc-livefn.ol.epicgames.com/fortnite/api/game/v2/profile" in flow.request.pretty_url and "profileId=athena" in flow.request.pretty_url:
+        response_text = flow.response.content.decode('utf-8')
+        data = json.loads(response_text)
+
+        profile_changes = data.get('profileChanges', [])
+        if profile_changes and isinstance(profile_changes[0], dict):
+            profile = profile_changes[0].get('profile', {})
+            stats = profile.get('stats', {})
+            attributes = stats.get('attributes', {})
+
+            attributes.update({
+                "habanero_unlocked": False,
+                "level": 999,
+                "mfa_reward_claimed": True,
+                "last_xp_interaction": "2025-06-12T19:23:32.391Z",
+                "quest_manager": {
+                    "dailyLoginInterval": "2025-06-12T18:19:25.617Z",
+                    "dailyQuestRerolls": 1
+                },
+                "book_level": 99999999999999999,
+                "season_num": 36,
+                "accountLevel": 999999999999999,
+                "locker_service_cosmetic_items_migration_status": "LockerReadDualWrite"
+            })
+
+            data['profileChanges'][0]['profile']['stats']['attributes'] = attributes
+
+            flow.response.content = json.dumps(data).encode('utf-8')
+
+
+
 
 
 
@@ -156,10 +199,12 @@ def response(flow: http.HTTPFlow):
                 data = ujson.loads(flow.response.text)
                 displayName = data["displayName"]
                 print(f"Current Display Name: {displayName}")
-                new_displayName = "STAR\n" * 50
+                new_displayName = "stardev" 
                 data["displayName"] = new_displayName
                 flow.response.text = ujson.dumps(data)
                 print(f"New Display Name: {new_displayName}")
+
+    
 
 
 
