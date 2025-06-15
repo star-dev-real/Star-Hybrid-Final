@@ -1,6 +1,6 @@
 """
 Star Hybrid V1.0.0 beta
-If your gonna skid, get some bitches
+I don't reccommend skidding
 Enjoy! :)
 """
 
